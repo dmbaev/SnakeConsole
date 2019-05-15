@@ -10,7 +10,6 @@ namespace Snake_console_NetCore
         static int _columns = 10;
         static bool NoGameOver;
         static bool GameRestart = false;
-        ConsoleKey _lastDirection = ConsoleKey.RightArrow;
         static Timer _gTimer;
         static ConsoleKey _lastMove;
         static Random rnd = new Random();
