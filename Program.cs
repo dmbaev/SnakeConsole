@@ -6,6 +6,7 @@ namespace Snake_console_NetCore
 {
     class Program
     {
+ #region variables
         static int _rows = 10;
         static int _columns = 10;
         static bool NoGameOver;
@@ -19,12 +20,22 @@ namespace Snake_console_NetCore
         static int _lineStartMenu;
         static double _Interval = 1000;
         static List<_coordinates> _Snake = new List<_coordinates>();
-        private  class _coordinates {
+        static bool _autostart = false;
+#endregion
+
+        public class _coordinates {
             public int _x {get; set;}
             public int _y { get; set;}
         }
         static void Main(string[] args)
         {
+            foreach (var item in args)
+            {
+                if (item=="-a")
+                {
+                    _autostart = true;
+                }
+            }
             do
             {
                 StartGame();
@@ -33,6 +44,8 @@ namespace Snake_console_NetCore
 
         static void StartGame()
         {
+            //Console.Write("\a");
+            //Console.Beep();
             _Snake.Clear();
             _Snake.Add(new _coordinates {_x=1, _y=1 });
             _lastMove = ConsoleKey.RightArrow;
@@ -46,7 +59,10 @@ namespace Snake_console_NetCore
 
             _gTimer = new Timer(_Interval);
             _gTimer.Elapsed += OnTimedEvent;
-            _gTimer.Start();
+            if (_autostart)
+            {
+                _gTimer.Start();
+            }
 
             draw();
             draw_O();
@@ -68,6 +84,10 @@ namespace Snake_console_NetCore
 
         static void _Move(ConsoleKey _key)
         {
+            if (_key == ConsoleKey.Escape)
+            {
+                Environment.Exit(0);
+            }
             if (!(_key == ConsoleKey.UpArrow || _key == ConsoleKey.DownArrow || _key == ConsoleKey.RightArrow || _key == ConsoleKey.LeftArrow || _key == ConsoleKey.R))
             {
                 Console.SetCursorPosition(0, 0);
@@ -252,7 +272,7 @@ namespace Snake_console_NetCore
             Console.ResetColor();
             if (Math.Round((decimal)(_Score/3))== _Score/3 && _Score >0)
             {
-                _Interval = _Interval - 15;
+                _Interval = _Interval - 50;
                 
                 if (_Interval > 0)
                 {
@@ -318,7 +338,13 @@ namespace Snake_console_NetCore
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.SetCursorPosition(_columns + 5, _lineStartMenu+2);
             Console.Write($"R-restart");
-            Console.ResetColor();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.SetCursorPosition(_columns + 5, _lineStartMenu + 3);
+            Console.Write($"Escape-Exit");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.SetCursorPosition(_columns + 5, _lineStartMenu + 7);
+            Console.Write($"github.com/dmbaev/SnakeConsole");
+            Console.ResetColor();            
         }
     }
 }
